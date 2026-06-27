@@ -389,74 +389,17 @@
   // --- Pricing Engine Logic ---
   let currentTab = 'purchase';
 
-  function switchTab(tab) {
-    currentTab = tab;
-    ['purchase', 'sale', 'refinance'].forEach(t => {
-      const btn = document.getElementById(`btn-${t}`);
-      if (btn) {
-        if (t === tab) {
-          btn.classList.add('bg-white', 'shadow-sm', 'text-gray-900');
-          btn.classList.remove('text-gray-500');
-        } else {
-          btn.classList.remove('bg-white', 'shadow-sm', 'text-gray-900');
-          btn.classList.add('text-gray-500');
-        }
-      }
-      const inputSec = document.getElementById(`inputs-${t}`);
-      if (inputSec) {
-        if (t === tab) inputSec.classList.remove('hidden');
-        else inputSec.classList.add('hidden');
-      }
-    });
-    calculateAll();
-  }
-
-  // Constants and UI elements
-  const outLegal = document.getElementById('out-legal');
-  const outDisb = document.getElementById('out-disb');
-  const outRegTrans = document.getElementById('out-reg-trans');
-  const outRegMort = document.getElementById('out-reg-mort');
-  const outMortCoord = document.getElementById('out-mort-coord');
-  const outDischarge = document.getElementById('out-discharge');
-  const outLevy = document.getElementById('out-levy');
-  const outTitle = document.getElementById('out-title');
-  const outOltt = document.getElementById('out-oltt');
-  const outTltt = document.getElementById('out-tltt');
-  const outTAdmin = document.getElementById('out-tadmin');
-  const outTotal = document.getElementById('out-total');
-
-  const rows = {
-    legal: document.getElementById('row-legal'),
-    disb: document.getElementById('row-disb'),
-    regTrans: document.getElementById('row-reg-trans'),
-    regMort: document.getElementById('row-reg-mort'),
-    mortCoord: document.getElementById('row-mort-coord'),
-    discharge: document.getElementById('row-discharge'),
-    levy: document.getElementById('row-levy'),
-    title: document.getElementById('row-title'),
-    oltt: document.getElementById('row-oltt'),
-    tltt: document.getElementById('row-tltt'),
-    tAdmin: document.getElementById('row-tadmin'),
-    divider1: document.getElementById('row-divider-1'),
-    divider2: document.getElementById('row-divider-2')
-  };
+  // Constants
+  const LEGAL_FEE_PURCHASE = 999.00;
+  const LEGAL_FEE_REFINANCE = 999.00;
+  const DISB_FEE = 450.00;
+  const REG_FEE = 84.00;
 
   const formatCurrency = (num) => new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(num);
 
-  const getEscalatedLegalFee = (baseFee, value) => {
-    let fee = baseFee;
-    if (value > 1000000) fee += Math.ceil((value - 1000000) / 100000) * 50;
-    return fee;
-  };
-
-  const getTitleInsurance = (value) => {
-    let premium = 226;
-    if (value > 750000) premium += Math.ceil((value - 750000) / 1000) * 0.75;
-    return premium;
-  };
-
   const calculateLTT = (price) => {
-    let tax = 0, p = price;
+    let tax = 0;
+    let p = price;
     if (p > 2000000) { tax += (p - 2000000) * 0.025; p = 2000000; }
     if (p > 400000) { tax += (p - 400000) * 0.02; p = 400000; }
     if (p > 250000) { tax += (p - 250000) * 0.015; p = 250000; }
@@ -466,23 +409,72 @@
   };
 
   const calculateAll = () => {
-    Object.values(rows).forEach(r => { if(r) r.classList.add('hidden'); });
-    rows.legal.classList.remove('hidden');
-    rows.disb.classList.remove('hidden');
+    // Get values
+    const price = parseFloat(document.getElementById('purchase-price')?.value) || 0;
+    const isToronto = document.getElementById('location')?.value === 'toronto';
+    const isFirstTime = document.getElementById('first-time')?.value === 'yes';
 
-    let total = 0;
-    // (Logic implementation continues as per your provided code...)
-    // ... logic for Purchase, Sale, Refinance ...
+    // Elements
+    const outDisb = document.getElementById('out-disb');
+    const outTitle = document.getElementById('out-title');
+    const outOltt = document.getElementById('out-oltt');
+    const outTltt = document.getElementById('out-tltt');
+    const tlttRow = document.getElementById('tltt-row');
+    const outTotal = document.getElementById('out-total');
+
+    // 1. Disbursements & Registration
+    // Purchase: Legal + Disb + Transfer Reg + Mortgage Reg
+    // Refinance: Legal + Disb + Mortgage Reg
+    let regCost = REG_FEE * 2; // Transfer + Mortgage
+    let totalDisb = DISB_FEE + regCost;
+    outDisb.textContent = formatCurrency(totalDisb);
+
+    // 2. Title Insurance
+    let titleInsurance = 300 + (price > 300000 ? ((price - 300000) / 1000) : 0);
+    outTitle.textContent = formatCurrency(titleInsurance);
+
+    // 3. LTT
+    let oltt = calculateLTT(price);
+    if (isFirstTime) oltt = Math.max(0, oltt - 4000);
+    outOltt.textContent = formatCurrency(oltt);
+
+    let tltt = 0;
+    if (isToronto) {
+        tlttRow.classList.remove('hidden');
+        tlttRow.classList.add('flex');
+        tltt = calculateLTT(price);
+        if (isFirstTime) tltt = Math.max(0, tltt - 4475);
+        outTltt.textContent = formatCurrency(tltt);
+    } else {
+        tlttRow.classList.add('hidden');
+        tlttRow.classList.remove('flex');
+    }
+
+    // 4. Total
+    const total = LEGAL_FEE_PURCHASE + totalDisb + titleInsurance + oltt + tltt;
     outTotal.textContent = formatCurrency(total);
   };
 
-  // Init
+  // Event Listeners
   document.querySelectorAll('#calc-form input, #calc-form select').forEach(el => {
     el.addEventListener('input', calculateAll);
   });
+  
   calculateAll();
-            // --- Navbar Scroll Effect ---
 
+  // --- Navbar Scroll Effect ---
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if (nav) {
+      if (window.scrollY > 20) {
+        nav.classList.add('bg-white/95', 'shadow-md');
+        nav.classList.remove('glass-panel');
+      } else {
+        nav.classList.add('glass-panel');
+        nav.classList.remove('bg-white/95', 'shadow-md');
+      }
+    }
+  });
 </script>
 
 <!-- ... existing code ... -->
