@@ -181,303 +181,208 @@
                 </div>
 
                 <!-- Right: Interactive Pricing Engine -->
-                <!-- ... existing code ... -->
-                <!-- Right: Interactive Pricing Engine -->
                 <div id="calculator-section" class="bg-white rounded-3xl p-8 shadow-float border border-gray-100 relative z-10">
-                    <div class="mb-6">
+                    <div class="mb-5">
                         <h2 class="text-2xl font-bold text-gray-900">Closing Cost Calculator</h2>
                         <p class="text-sm text-gray-500">Live estimates. No email required to calculate.</p>
                     </div>
 
-                    <!-- Calculator Tabs -->
-                    <div class="flex p-1 mb-6 space-x-1 bg-gray-100 rounded-xl">
-                        <button type="button" onclick="switchTab('purchase')" id="btn-purchase" class="flex-1 py-2 text-sm font-semibold text-gray-900 transition-all bg-white rounded-lg shadow-sm">Purchase</button>
-                        <button type="button" onclick="switchTab('sale')" id="btn-sale" class="flex-1 py-2 text-sm font-semibold text-gray-500 transition-all rounded-lg hover:text-gray-900">Sale</button>
-                        <button type="button" onclick="switchTab('refinance')" id="btn-refinance" class="flex-1 py-2 text-sm font-semibold text-gray-500 transition-all rounded-lg hover:text-gray-900">Refinance</button>
+                    <!-- Tab Navigation -->
+                    <div class="flex bg-gray-100 rounded-xl p-1 mb-6 gap-1">
+                        <button id="tab-purchase" onclick="switchTab('purchase')" class="calc-tab flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all bg-white text-brand-900 shadow-sm">
+                            Purchase
+                        </button>
+                        <button id="tab-sale" onclick="switchTab('sale')" class="calc-tab flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all text-gray-500 hover:text-gray-700">
+                            Sale
+                        </button>
+                        <button id="tab-refinance" onclick="switchTab('refinance')" class="calc-tab flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all text-gray-500 hover:text-gray-700">
+                            Refinance
+                        </button>
                     </div>
 
-                    <form id="calc-form" class="space-y-6">
-                        <!-- === PURCHASE INPUTS === -->
-                        <div id="inputs-purchase" class="space-y-4">
+                    <!-- ===== PURCHASE TAB ===== -->
+                    <div id="panel-purchase" class="calc-panel space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Purchase Price</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500 font-medium text-lg pointer-events-none">$</span>
+                                <input type="number" id="p-price" value="850000" class="block w-full pl-8 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-lg font-semibold text-gray-900 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block mb-2 text-sm font-semibold text-gray-700">Purchase Price</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><span class="text-lg font-medium text-gray-500">$</span></div>
-                                    <input type="number" id="p-price" value="850000" class="block w-full py-3 pl-8 pr-4 font-semibold text-gray-900 transition-colors border border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500" placeholder="0">
-                                </div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
+                                <select id="p-location" class="block w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer appearance-none text-sm">
+                                    <option value="ontario">Ontario (Outside Toronto)</option>
+                                    <option value="toronto">City of Toronto</option>
+                                </select>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Location</label>
-                                    <select id="p-loc" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
-                                        <option value="ontario">Ontario (Outside Toronto)</option>
-                                        <option value="toronto">City of Toronto</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block mb-2 text-sm font-semibold text-gray-700">First-Time Buyer?</label>
-                                    <select id="p-first" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Will there be a mortgage?</label>
-                                    <select id="p-mortgage" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                                <div id="p-lender-div">
-                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Lender</label>
-                                    <select id="p-lender" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
-                                        <option value="big">TD, Scotiabank, CIBC, BMO, RBC</option>
-                                        <option value="other">Other Lender</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- === SALE INPUTS === -->
-                        <div id="inputs-sale" class="space-y-4 hidden">
                             <div>
-                                <label class="block mb-2 text-sm font-semibold text-gray-700">Sale Price</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><span class="text-lg font-medium text-gray-500">$</span></div>
-                                    <input type="number" id="s-price" value="850000" class="block w-full py-3 pl-8 pr-4 font-semibold text-gray-900 transition-colors border border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500" placeholder="0">
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Location</label>
-                                    <select id="s-loc" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
-                                        <option value="ontario">Ontario (Outside Toronto)</option>
-                                        <option value="toronto">City of Toronto</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Discharging a Mortgage?</label>
-                                    <select id="s-mortgage" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">First-Time Buyer?</label>
+                                <select id="p-firsttime" class="block w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer appearance-none text-sm">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
                             </div>
                         </div>
-
-                        <!-- === REFINANCE INPUTS === -->
-                        <div id="inputs-refinance" class="space-y-4 hidden">
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block mb-2 text-sm font-semibold text-gray-700">New Mortgage Amount</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><span class="text-lg font-medium text-gray-500">$</span></div>
-                                    <input type="number" id="r-amount" value="500000" class="block w-full py-3 pl-8 pr-4 font-semibold text-gray-900 transition-colors border border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500" placeholder="0">
-                                </div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Mortgage?</label>
+                                <select id="p-mortgage" class="block w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer appearance-none text-sm">
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Location</label>
-                                    <select id="r-loc" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
-                                        <option value="ontario">Ontario (Outside Toronto)</option>
-                                        <option value="toronto">City of Toronto</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Lender</label>
-                                    <select id="r-lender" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
-                                        <option value="big">TD, Scotiabank, CIBC, BMO, RBC</option>
-                                        <option value="other">Other Lender</option>
-                                    </select>
-                                </div>
+                            <div id="p-lender-wrap">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Lender</label>
+                                <select id="p-lender" class="block w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer appearance-none text-sm">
+                                    <option value="big">TD Bank</option>
+                                    <option value="big">Scotiabank</option>
+                                    <option value="big">CIBC</option>
+                                    <option value="big">Bank of Montreal</option>
+                                    <option value="big">RBC</option>
+                                    <option value="other">Other Lender</option>
+                                </select>
                             </div>
                         </div>
-
-                        <!-- === RESULTS BREAKDOWN === -->
-                        <div class="p-5 mt-8 border border-gray-100 bg-gray-50 rounded-2xl space-y-3">
-                            
-                            <div id="row-legal" class="flex items-center justify-between text-sm">
-                                <span class="font-medium text-gray-600">Legal Fees</span>
-                                <span class="font-semibold text-gray-900" id="out-legal">$999.00</span>
+                        <!-- Purchase Breakdown -->
+                        <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 space-y-2.5 mt-2">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium flex items-center gap-1">Legal Fees <i class="ph-info text-gray-400 text-xs" title="$999 for properties up to $1M, then +$50 per additional $100K. +$100 for non-major-bank lenders."></i></span>
+                                <span class="font-semibold text-gray-900" id="p-out-legal">$999.00</span>
                             </div>
-                            
-                            <div id="row-disb" class="flex items-center justify-between text-sm">
-                                <span class="font-medium text-gray-600">Disbursements</span>
-                                <span class="font-semibold text-gray-900" id="out-disb">$540.00</span>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium">Disbursements</span>
+                                <span class="font-semibold text-gray-900">$540.00</span>
                             </div>
-
-                            <div id="row-reg-trans" class="items-center justify-between text-sm flex">
-                                <span class="font-medium text-gray-600">Registration of Transfer</span>
-                                <span class="font-semibold text-gray-900" id="out-reg-trans">$85.00</span>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium">Registration of Transfer</span>
+                                <span class="font-semibold text-gray-900">$85.00</span>
                             </div>
-
-                            <div id="row-reg-mort" class="items-center justify-between text-sm flex">
-                                <span class="font-medium text-gray-600">Registration of Mortgage</span>
-                                <span class="font-semibold text-gray-900" id="out-reg-mort">$85.00</span>
+                            <div id="p-reg-mortgage-row" class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium">Registration of Mortgage</span>
+                                <span class="font-semibold text-gray-900">$85.00</span>
                             </div>
-
-                            <div id="row-mort-coord" class="items-center justify-between text-sm flex">
-                                <span class="font-medium text-gray-600">Mortgage Coordination Fee</span>
-                                <span class="font-semibold text-gray-900" id="out-mort-coord">$180.00</span>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium flex items-center gap-1">Title Insurance (Est.) <i class="ph-info text-gray-400 text-xs" title="$200+HST up to $750K, then $0.75 per $1,000 above that."></i></span>
+                                <span class="font-semibold text-gray-900" id="p-out-title">—</span>
                             </div>
-
-                            <div id="row-discharge" class="items-center justify-between text-sm hidden">
-                                <span class="font-medium text-gray-600">Discharge of Mortgage</span>
-                                <span class="font-semibold text-gray-900" id="out-discharge">$85.00</span>
+                            <div class="w-full h-px bg-gray-200"></div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium">Ontario Land Transfer Tax</span>
+                                <span class="font-semibold text-gray-900" id="p-out-oltt">—</span>
                             </div>
-
-                            <div id="row-levy" class="items-center justify-between text-sm hidden">
-                                <span class="font-medium text-gray-600">Law Society Levy</span>
-                                <span class="font-semibold text-gray-900" id="out-levy">$73.45</span>
+                            <div id="p-tltt-row" class="hidden flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium">Toronto Land Transfer Tax</span>
+                                <span class="font-semibold text-gray-900" id="p-out-tltt">—</span>
                             </div>
-
-                            <div id="row-title" class="items-center justify-between text-sm flex">
-                                <span class="font-medium text-gray-600 flex items-center gap-1">Title Insurance (Est.)</span>
-                                <span class="font-semibold text-gray-900" id="out-title">$226.00</span>
+                            <div id="p-mltt-row" class="hidden flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium flex items-center gap-1">Toronto Admin Fee <i class="ph-info text-gray-400 text-xs" title="$102.56 + HST = $115.89"></i></span>
+                                <span class="font-semibold text-gray-900">$115.89</span>
                             </div>
-
-                            <div id="row-divider-1" class="w-full h-px my-2 bg-gray-200 flex"></div>
-
-                            <div id="row-oltt" class="items-center justify-between text-sm flex">
-                                <span class="font-medium text-gray-600">Ontario Land Transfer Tax</span>
-                                <span class="font-semibold text-gray-900" id="out-oltt">$13,475.00</span>
-                            </div>
-
-                            <div id="row-tltt" class="items-center justify-between text-sm hidden">
-                                <span class="font-medium text-gray-600">Toronto Land Transfer Tax</span>
-                                <span class="font-semibold text-gray-900" id="out-tltt">$0.00</span>
-                            </div>
-
-                            <div id="row-tadmin" class="items-center justify-between text-sm hidden">
-                                <span class="font-medium text-gray-600">Toronto Administration Tax</span>
-                                <span class="font-semibold text-gray-900" id="out-tadmin">$115.89</span>
-                            </div>
-
-                            <div id="row-divider-2" class="w-full h-px my-2 bg-gray-200 flex"></div>
-                            
-                            <div class="flex items-center justify-between pt-2">
-                                <span class="text-lg font-bold text-gray-900">Total Est. Closing Cost</span>
-                                <span class="text-2xl font-bold text-brand-900" id="out-total">$15,858.00</span>
+                            <div class="w-full h-px bg-gray-200"></div>
+                            <div class="flex justify-between items-center pt-1">
+                                <span class="text-base font-bold text-gray-900">Total Est. Closing Cost</span>
+                                <span class="text-xl font-bold text-brand-900" id="p-out-total">—</span>
                             </div>
                         </div>
+                        <!-- Caveat -->
+                        <p class="text-xs text-gray-400 leading-relaxed">* To assist with budgeting and transparency, our office disbursements are fixed and capped. However, certain third-party charges are not included in office disbursements, including Unity Software fee ($240) and ID verification ($30).</p>
+                    </div>
 
-                        <p class="text-xs text-gray-500 leading-snug mt-3">
-                            <i class="ph-info-bold text-brand-500"></i> To assist with budgeting and transparency, our office disbursements are fixed and capped. However, certain third-party charges are not included in office disbursements, including Unity Software fee ($240), ID verification ($30).
-                        </p>
-                        <!-- Trigger Lead Capture -->
-<button type="button" onclick="document.getElementById('lead-modal').classList.remove('hidden')" class="mt-6 w-full bg-accent-500 hover:bg-accent-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-md flex justify-center items-center gap-2">
-    <i class="ph-envelope-simple-bold text-xl"></i>
-    Get Full Breakdown
-</button>
-                    </form>
-                    
-<script>
-  // --- FAQ Toggle Logic ---
-  function toggleFaq(button) {
-    const content = button.nextElementSibling;
-    const icon = button.querySelector('i');
-    if (content.classList.contains('hidden')) {
-      content.classList.remove('hidden');
-      icon.classList.add('rotate-180');
-    } else {
-      content.classList.add('hidden');
-      icon.classList.remove('rotate-180');
-    }
-  }
+                    <!-- ===== SALE TAB ===== -->
+                    <div id="panel-sale" class="calc-panel hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Sale Price</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500 font-medium text-lg pointer-events-none">$</span>
+                                <input type="number" id="s-price" value="850000" class="block w-full pl-8 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-lg font-semibold text-gray-900 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Existing Mortgage?</label>
+                                <select id="s-mortgage" class="block w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer appearance-none text-sm">
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
+                                <select id="s-location" class="block w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer appearance-none text-sm">
+                                    <option value="ontario">Ontario (Outside Toronto)</option>
+                                    <option value="toronto">City of Toronto</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Sale Breakdown -->
+                        <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 space-y-2.5 mt-2">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium flex items-center gap-1">Legal Fees <i class="ph-info text-gray-400 text-xs" title="$999 for properties up to $1M, then +$50 per additional $100K."></i></span>
+                                <span class="font-semibold text-gray-900" id="s-out-legal">$999.00</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium">Disbursements</span>
+                                <span class="font-semibold text-gray-900">$540.00</span>
+                            </div>
+                            <div id="s-discharge-row" class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium">Discharge of Mortgage</span>
+                                <span class="font-semibold text-gray-900">$85.00</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium flex items-center gap-1">Law Society Levy <i class="ph-info text-gray-400 text-xs" title="Mandatory levy payable to the Law Society of Ontario."></i></span>
+                                <span class="font-semibold text-gray-900">$73.45</span>
+                            </div>
+                            <div class="w-full h-px bg-gray-200"></div>
+                            <div class="flex justify-between items-center pt-1">
+                                <span class="text-base font-bold text-gray-900">Total Est. Closing Cost</span>
+                                <span class="text-xl font-bold text-brand-900" id="s-out-total">—</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 leading-relaxed">* To assist with budgeting and transparency, our office disbursements are fixed and capped. However, certain third-party charges are not included in office disbursements, including Unity Software fee ($240) and ID verification ($30).</p>
+                    </div>
 
-  // --- Pricing Engine Logic ---
-  let currentTab = 'purchase';
+                    <!-- ===== REFINANCE TAB ===== -->
+                    <div id="panel-refinance" class="calc-panel hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">New Mortgage Amount</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500 font-medium text-lg pointer-events-none">$</span>
+                                <input type="number" id="r-price" value="600000" class="block w-full pl-8 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-lg font-semibold text-gray-900 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors" placeholder="0">
+                            </div>
+                        </div>
+                        <!-- Refinance Breakdown -->
+                        <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 space-y-2.5 mt-2">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium flex items-center gap-1">Legal Fees <i class="ph-info text-gray-400 text-xs" title="$999 for mortgage amounts up to $1M, then +$50 per additional $100K."></i></span>
+                                <span class="font-semibold text-gray-900" id="r-out-legal">$999.00</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium">Disbursements</span>
+                                <span class="font-semibold text-gray-900">$540.00</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium">Registration of Mortgage</span>
+                                <span class="font-semibold text-gray-900">$85.00</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 font-medium flex items-center gap-1">Title Insurance (Est.) <i class="ph-info text-gray-400 text-xs" title="$200+HST up to $750K, then $0.75 per $1,000 above that."></i></span>
+                                <span class="font-semibold text-gray-900" id="r-out-title">—</span>
+                            </div>
+                            <div class="w-full h-px bg-gray-200"></div>
+                            <div class="flex justify-between items-center pt-1">
+                                <span class="text-base font-bold text-gray-900">Total Est. Closing Cost</span>
+                                <span class="text-xl font-bold text-brand-900" id="r-out-total">—</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 leading-relaxed">* To assist with budgeting and transparency, our office disbursements are fixed and capped. However, certain third-party charges are not included in office disbursements, including Unity Software fee ($240) and ID verification ($30).</p>
+                    </div>
 
-  // Constants
-  const LEGAL_FEE_PURCHASE = 999.00;
-  const LEGAL_FEE_REFINANCE = 999.00;
-  const DISB_FEE = 450.00;
-  const REG_FEE = 84.00;
-
-  const formatCurrency = (num) => new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(num);
-
-  const calculateLTT = (price) => {
-    let tax = 0;
-    let p = price;
-    if (p > 2000000) { tax += (p - 2000000) * 0.025; p = 2000000; }
-    if (p > 400000) { tax += (p - 400000) * 0.02; p = 400000; }
-    if (p > 250000) { tax += (p - 250000) * 0.015; p = 250000; }
-    if (p > 55000) { tax += (p - 55000) * 0.01; p = 55000; }
-    if (p > 0) tax += p * 0.005;
-    return tax;
-  };
-
-  const calculateAll = () => {
-    // Get values
-    const price = parseFloat(document.getElementById('purchase-price')?.value) || 0;
-    const isToronto = document.getElementById('location')?.value === 'toronto';
-    const isFirstTime = document.getElementById('first-time')?.value === 'yes';
-
-    // Elements
-    const outDisb = document.getElementById('out-disb');
-    const outTitle = document.getElementById('out-title');
-    const outOltt = document.getElementById('out-oltt');
-    const outTltt = document.getElementById('out-tltt');
-    const tlttRow = document.getElementById('tltt-row');
-    const outTotal = document.getElementById('out-total');
-
-    // 1. Disbursements & Registration
-    // Purchase: Legal + Disb + Transfer Reg + Mortgage Reg
-    // Refinance: Legal + Disb + Mortgage Reg
-    let regCost = REG_FEE * 2; // Transfer + Mortgage
-    let totalDisb = DISB_FEE + regCost;
-    outDisb.textContent = formatCurrency(totalDisb);
-
-    // 2. Title Insurance
-    let titleInsurance = 300 + (price > 300000 ? ((price - 300000) / 1000) : 0);
-    outTitle.textContent = formatCurrency(titleInsurance);
-
-    // 3. LTT
-    let oltt = calculateLTT(price);
-    if (isFirstTime) oltt = Math.max(0, oltt - 4000);
-    outOltt.textContent = formatCurrency(oltt);
-
-    let tltt = 0;
-    if (isToronto) {
-        tlttRow.classList.remove('hidden');
-        tlttRow.classList.add('flex');
-        tltt = calculateLTT(price);
-        if (isFirstTime) tltt = Math.max(0, tltt - 4475);
-        outTltt.textContent = formatCurrency(tltt);
-    } else {
-        tlttRow.classList.add('hidden');
-        tlttRow.classList.remove('flex');
-    }
-
-    // 4. Total
-    const total = LEGAL_FEE_PURCHASE + totalDisb + titleInsurance + oltt + tltt;
-    outTotal.textContent = formatCurrency(total);
-  };
-
-  // Event Listeners
-  document.querySelectorAll('#calc-form input, #calc-form select').forEach(el => {
-    el.addEventListener('input', calculateAll);
-  });
-  
-  calculateAll();
-
-  // --- Navbar Scroll Effect ---
-  window.addEventListener('scroll', () => {
-    const nav = document.getElementById('navbar');
-    if (nav) {
-      if (window.scrollY > 20) {
-        nav.classList.add('bg-white/95', 'shadow-md');
-        nav.classList.remove('glass-panel');
-      } else {
-        nav.classList.add('glass-panel');
-        nav.classList.remove('bg-white/95', 'shadow-md');
-      }
-    }
-  });
-</script>
-
-<!-- ... existing code ... -->
+                    <!-- Trigger Lead Capture -->
+                    <button onclick="document.getElementById('lead-modal').classList.remove('hidden')" class="mt-5 w-full bg-accent-500 hover:bg-accent-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-md flex justify-center items-center gap-2">
+                        Lock In This Quote
+                        <i class="ph-arrow-right font-bold"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -920,108 +825,157 @@
             }
         }
 
-        // --- Pricing Engine Logic ---
-        const calcForm = document.getElementById('calc-form');
-        const priceInput = document.getElementById('purchase-price');
-        const locationSelect = document.getElementById('location');
-        const firstTimeSelect = document.getElementById('first-time');
-        
-        const outDisb = document.getElementById('out-disb');
-        const outTitle = document.getElementById('out-title');
-        const outOltt = document.getElementById('out-oltt');
-        const outTltt = document.getElementById('out-tltt');
-        const outTotal = document.getElementById('out-total');
-        const tlttRow = document.getElementById('tltt-row');
+        // ===== CALCULATOR ENGINE =====
 
-        // Fixed Fees
-        const LEGAL_FEE = 999.00;
-        const DISB_FEE = 450.00;
-        const REG_FEE = 84.00; // Estimated single transfer doc
+        const fmt = (n) => new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(n);
+        const HST = 0.13;
 
-        const formatCurrency = (num) => {
-            return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(num);
-        };
+        // Legal fee: $999 up to $1M, then +$50 per $100K above $1M
+        function legalFee(amount) {
+            if (amount <= 1000000) return 999;
+            const stepsOver = Math.ceil((amount - 1000000) / 100000);
+            return 999 + stepsOver * 50;
+        }
 
-        const calculateLTT = (price) => {
-            let tax = 0;
-            let p = price;
-            
-            if (p > 2000000) {
-                tax += (p - 2000000) * 0.025;
-                p = 2000000;
-            }
-            if (p > 400000) {
-                tax += (p - 400000) * 0.02;
-                p = 400000;
-            }
-            if (p > 250000) {
-                tax += (p - 250000) * 0.015;
-                p = 250000;
-            }
-            if (p > 55000) {
-                tax += (p - 55000) * 0.01;
-                p = 55000;
-            }
-            if (p > 0) {
-                tax += p * 0.005;
-            }
+        // Ontario LTT brackets
+        function calcOLTT(price) {
+            let tax = 0, p = price;
+            if (p > 2000000)  { tax += (p - 2000000) * 0.025; p = 2000000; }
+            if (p > 400000)   { tax += (p - 400000)  * 0.020; p = 400000;  }
+            if (p > 250000)   { tax += (p - 250000)  * 0.015; p = 250000;  }
+            if (p > 55000)    { tax += (p - 55000)   * 0.010; p = 55000;   }
+            if (p > 0)        { tax += p              * 0.005; }
             return tax;
-        };
+        }
 
-        const calculateAll = () => {
-            const price = parseFloat(priceInput.value) || 0;
-            const isToronto = locationSelect.value === 'toronto';
-            const isFirstTime = firstTimeSelect.value === 'yes';
+        // Toronto MLTT uses same brackets as OLTT
+        function calcMLTT(price) { return calcOLTT(price); }
 
-            // Disbursements
-            const totalDisb = DISB_FEE + REG_FEE;
-            outDisb.textContent = formatCurrency(totalDisb);
+        // Title insurance: $200+HST up to $750K, then +$0.75 per $1K above $750K, +HST on total
+        function titleInsurance(amount) {
+            let base = 200;
+            if (amount > 750000) base += ((amount - 750000) / 1000) * 0.75;
+            return base * (1 + HST);
+        }
 
-            // Title Insurance (Est: Min $300, then ~$1 per $1000 over 300k)
-            let titleInsurance = 300;
-            if (price > 300000) {
-                titleInsurance += ((price - 300000) / 1000) * 1;
-            }
-            // Add a realistic cap or variation here if needed, keeping simple for model
-            outTitle.textContent = formatCurrency(titleInsurance);
+        // ---- TAB SWITCHING ----
+        function switchTab(tab) {
+            document.querySelectorAll('.calc-panel').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.calc-tab').forEach(t => {
+                t.classList.remove('bg-white', 'text-brand-900', 'shadow-sm');
+                t.classList.add('text-gray-500');
+            });
+            document.getElementById('panel-' + tab).classList.remove('hidden');
+            const activeTab = document.getElementById('tab-' + tab);
+            activeTab.classList.add('bg-white', 'text-brand-900', 'shadow-sm');
+            activeTab.classList.remove('text-gray-500');
+        }
 
-            // LTT
-            let oltt = calculateLTT(price);
-            let tltt = 0;
+        // ---- PURCHASE CALC ----
+        function calcPurchase() {
+            const price      = parseFloat(document.getElementById('p-price').value) || 0;
+            const isToronto  = document.getElementById('p-location').value === 'toronto';
+            const isFirstTime = document.getElementById('p-firsttime').value === 'yes';
+            const hasMortgage = document.getElementById('p-mortgage').value === 'yes';
+            const lenderType  = document.getElementById('p-lender').value; // 'big' or 'other'
 
-            if (isFirstTime) {
-                oltt = Math.max(0, oltt - 4000);
-            }
-            outOltt.textContent = formatCurrency(oltt);
+            // Legal fee — if Other Lender, add $100
+            let legal = legalFee(price);
+            if (hasMortgage && lenderType === 'other') legal += 100;
+            document.getElementById('p-out-legal').textContent = fmt(legal);
 
+            // Fixed line items
+            const disb = 540;
+            const regTransfer = 85;
+            const regMortgage = hasMortgage ? 85 : 0;
+
+            // Show/hide Registration of Mortgage row
+            document.getElementById('p-reg-mortgage-row').classList.toggle('hidden', !hasMortgage);
+            // Show/hide lender dropdown
+            document.getElementById('p-lender-wrap').classList.toggle('hidden', !hasMortgage);
+
+            // Title insurance
+            const title = titleInsurance(price);
+            document.getElementById('p-out-title').textContent = fmt(title);
+
+            // Ontario LTT
+            let oltt = calcOLTT(price);
+            if (isFirstTime) oltt = Math.max(0, oltt - 4000);
+            document.getElementById('p-out-oltt').textContent = fmt(oltt);
+
+            // Toronto LTT + Admin fee
+            let tltt = 0, mlttAdmin = 0;
             if (isToronto) {
-                tlttRow.classList.remove('hidden');
-                tlttRow.classList.add('flex');
-                tltt = calculateLTT(price); // Same bracket rates
-                if (isFirstTime) {
-                    tltt = Math.max(0, tltt - 4475);
-                }
-                outTltt.textContent = formatCurrency(tltt);
+                tltt = calcMLTT(price);
+                if (isFirstTime) tltt = Math.max(0, tltt - 4475);
+                mlttAdmin = 115.89;
+                document.getElementById('p-tltt-row').classList.remove('hidden');
+                document.getElementById('p-tltt-row').style.display = 'flex';
+                document.getElementById('p-out-tltt').textContent = fmt(tltt);
+                document.getElementById('p-mltt-row').classList.remove('hidden');
+                document.getElementById('p-mltt-row').style.display = 'flex';
             } else {
-                tlttRow.classList.add('hidden');
-                tlttRow.classList.remove('flex');
-                tltt = 0;
+                document.getElementById('p-tltt-row').classList.add('hidden');
+                document.getElementById('p-mltt-row').classList.add('hidden');
             }
 
-            // Total
-            const total = LEGAL_FEE + totalDisb + titleInsurance + oltt + tltt;
-            outTotal.textContent = formatCurrency(total);
-        };
+            const total = legal + disb + regTransfer + regMortgage + title + oltt + tltt + mlttAdmin;
+            document.getElementById('p-out-total').textContent = fmt(total);
+        }
 
-        // Event Listeners
-        ['input', 'change'].forEach(evt => {
-            priceInput.addEventListener(evt, calculateAll);
+        // ---- SALE CALC ----
+        function calcSale() {
+            const price       = parseFloat(document.getElementById('s-price').value) || 0;
+            const hasMortgage = document.getElementById('s-mortgage').value === 'yes';
+
+            const legal = legalFee(price);
+            document.getElementById('s-out-legal').textContent = fmt(legal);
+
+            const disb = 540;
+            const discharge = hasMortgage ? 85 : 0;
+            const levy = 73.45;
+
+            document.getElementById('s-discharge-row').classList.toggle('hidden', !hasMortgage);
+
+            const total = legal + disb + discharge + levy;
+            document.getElementById('s-out-total').textContent = fmt(total);
+        }
+
+        // ---- REFINANCE CALC ----
+        function calcRefinance() {
+            const amount = parseFloat(document.getElementById('r-price').value) || 0;
+
+            const legal = legalFee(amount);
+            document.getElementById('r-out-legal').textContent = fmt(legal);
+
+            const disb = 540;
+            const regMortgage = 85;
+            const title = titleInsurance(amount);
+            document.getElementById('r-out-title').textContent = fmt(title);
+
+            const total = legal + disb + regMortgage + title;
+            document.getElementById('r-out-total').textContent = fmt(total);
+        }
+
+        // ---- EVENT LISTENERS ----
+        ['p-price','p-location','p-firsttime','p-mortgage','p-lender'].forEach(id => {
+            document.getElementById(id).addEventListener('change', calcPurchase);
+            document.getElementById(id).addEventListener('input', calcPurchase);
         });
-        locationSelect.addEventListener('change', calculateAll);
-        firstTimeSelect.addEventListener('change', calculateAll);
+        ['s-price','s-mortgage','s-location'].forEach(id => {
+            document.getElementById(id).addEventListener('change', calcSale);
+            document.getElementById(id).addEventListener('input', calcSale);
+        });
+        ['r-price'].forEach(id => {
+            document.getElementById(id).addEventListener('change', calcRefinance);
+            document.getElementById(id).addEventListener('input', calcRefinance);
+        });
 
-        // Initial Calculation
-        calculateAll();
+        // Initial render
+        switchTab('purchase');
+        calcPurchase();
+        calcSale();
+        calcRefinance();
 
         // --- Navbar Scroll Effect ---
         window.addEventListener('scroll', () => {
