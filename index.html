@@ -365,11 +365,13 @@
                         <p class="text-xs text-gray-500 leading-snug mt-3">
                             <i class="ph-info-bold text-brand-500"></i> To assist with budgeting and transparency, our office disbursements are fixed and capped. However, certain third-party charges are not included in office disbursements, including Unity Software fee ($240), ID verification ($30).
                         </p>
+                        <!-- Trigger Lead Capture -->
+<button type="button" onclick="document.getElementById('lead-modal').classList.remove('hidden')" class="mt-6 w-full bg-accent-500 hover:bg-accent-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-md flex justify-center items-center gap-2">
+    <i class="ph-envelope-simple-bold text-xl"></i>
+    Get Full Breakdown
+</button>
                     </form>
                     
-                    <!-- Trigger Lead Capture -->
-                    <button onclick="document.getElementById('lead-modal').classList.remove('hidden')" class="mt-6 w-full bg-accent-500 hover:bg-accent-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-md flex justify-center items-center gap-2">
-<!-- ... existing code ... -->
         // --- FAQ Toggle Logic ---
         function toggleFaq(button) {
             const content = button.nextElementSibling;
