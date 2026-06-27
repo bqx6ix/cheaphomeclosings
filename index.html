@@ -181,92 +181,464 @@
                 </div>
 
                 <!-- Right: Interactive Pricing Engine -->
+                <!-- ... existing code ... -->
+                <!-- Right: Interactive Pricing Engine -->
                 <div id="calculator-section" class="bg-white rounded-3xl p-8 shadow-float border border-gray-100 relative z-10">
                     <div class="mb-6">
                         <h2 class="text-2xl font-bold text-gray-900">Closing Cost Calculator</h2>
                         <p class="text-sm text-gray-500">Live estimates. No email required to calculate.</p>
                     </div>
 
+                    <!-- Calculator Tabs -->
+                    <div class="flex p-1 mb-6 space-x-1 bg-gray-100 rounded-xl">
+                        <button type="button" onclick="switchTab('purchase')" id="btn-purchase" class="flex-1 py-2 text-sm font-semibold text-gray-900 transition-all bg-white rounded-lg shadow-sm">Purchase</button>
+                        <button type="button" onclick="switchTab('sale')" id="btn-sale" class="flex-1 py-2 text-sm font-semibold text-gray-500 transition-all rounded-lg hover:text-gray-900">Sale</button>
+                        <button type="button" onclick="switchTab('refinance')" id="btn-refinance" class="flex-1 py-2 text-sm font-semibold text-gray-500 transition-all rounded-lg hover:text-gray-900">Refinance</button>
+                    </div>
+
                     <form id="calc-form" class="space-y-6">
-                        <!-- Purchase Price -->
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Purchase Price</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <span class="text-gray-500 font-medium text-lg">$</span>
+                        <!-- === PURCHASE INPUTS === -->
+                        <div id="inputs-purchase" class="space-y-4">
+                            <div>
+                                <label class="block mb-2 text-sm font-semibold text-gray-700">Purchase Price</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><span class="text-lg font-medium text-gray-500">$</span></div>
+                                    <input type="number" id="p-price" value="850000" class="block w-full py-3 pl-8 pr-4 font-semibold text-gray-900 transition-colors border border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500" placeholder="0">
                                 </div>
-                                <input type="number" id="purchase-price" value="850000" class="block w-full pl-8 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-lg font-semibold text-gray-900 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors" placeholder="0">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Location</label>
+                                    <select id="p-loc" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
+                                        <option value="ontario">Ontario (Outside Toronto)</option>
+                                        <option value="toronto">City of Toronto</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block mb-2 text-sm font-semibold text-gray-700">First-Time Buyer?</label>
+                                    <select id="p-first" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Will there be a mortgage?</label>
+                                    <select id="p-mortgage" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                                <div id="p-lender-div">
+                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Lender</label>
+                                    <select id="p-lender" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
+                                        <option value="big">TD, Scotiabank, CIBC, BMO, RBC</option>
+                                        <option value="other">Other Lender</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Location & First Time Buyer -->
-                        <div class="grid grid-cols-2 gap-4">
+                        <!-- === SALE INPUTS === -->
+                        <div id="inputs-sale" class="space-y-4 hidden">
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
-                                <select id="location" class="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer appearance-none">
-                                    <option value="ontario">Ontario (Outside Toronto)</option>
-                                    <option value="toronto">City of Toronto</option>
-                                </select>
+                                <label class="block mb-2 text-sm font-semibold text-gray-700">Sale Price</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><span class="text-lg font-medium text-gray-500">$</span></div>
+                                    <input type="number" id="s-price" value="850000" class="block w-full py-3 pl-8 pr-4 font-semibold text-gray-900 transition-colors border border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500" placeholder="0">
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">First-Time Buyer?</label>
-                                <select id="first-time" class="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer appearance-none">
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Location</label>
+                                    <select id="s-loc" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
+                                        <option value="ontario">Ontario (Outside Toronto)</option>
+                                        <option value="toronto">City of Toronto</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Discharging a Mortgage?</label>
+                                    <select id="s-mortgage" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Results Breakdown (Stripe Style) -->
-                        <div class="bg-gray-50 rounded-2xl p-5 border border-gray-100 space-y-3 mt-8">
+                        <!-- === REFINANCE INPUTS === -->
+                        <div id="inputs-refinance" class="space-y-4 hidden">
+                            <div>
+                                <label class="block mb-2 text-sm font-semibold text-gray-700">New Mortgage Amount</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><span class="text-lg font-medium text-gray-500">$</span></div>
+                                    <input type="number" id="r-amount" value="500000" class="block w-full py-3 pl-8 pr-4 font-semibold text-gray-900 transition-colors border border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500" placeholder="0">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Location</label>
+                                    <select id="r-loc" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
+                                        <option value="ontario">Ontario (Outside Toronto)</option>
+                                        <option value="toronto">City of Toronto</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block mb-2 text-sm font-semibold text-gray-700">Lender</label>
+                                    <select id="r-lender" class="block w-full px-4 py-3 font-medium text-gray-900 transition-colors border border-gray-200 cursor-pointer bg-gray-50 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 appearance-none">
+                                        <option value="big">TD, Scotiabank, CIBC, BMO, RBC</option>
+                                        <option value="other">Other Lender</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- === RESULTS BREAKDOWN === -->
+                        <div class="p-5 mt-8 border border-gray-100 bg-gray-50 rounded-2xl space-y-3">
                             
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-600 font-medium flex items-center gap-1">
-                                    Legal Fees <i class="ph-info text-gray-400" title="Fixed fee. No surprises."></i>
-                                </span>
-                                <span class="font-semibold text-gray-900">$999.00</span>
+                            <div id="row-legal" class="flex items-center justify-between text-sm">
+                                <span class="font-medium text-gray-600">Legal Fees</span>
+                                <span class="font-semibold text-gray-900" id="out-legal">$999.00</span>
                             </div>
                             
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-600 font-medium flex items-center gap-1">
-                                    Disbursements & Registration <i class="ph-info text-gray-400" title="$450 internal + ~$84 gov registration"></i>
-                                </span>
-                                <span class="font-semibold text-gray-900" id="out-disb">$534.00</span>
+                            <div id="row-disb" class="flex items-center justify-between text-sm">
+                                <span class="font-medium text-gray-600">Disbursements</span>
+                                <span class="font-semibold text-gray-900" id="out-disb">$540.00</span>
                             </div>
 
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-600 font-medium flex items-center gap-1">
-                                    Title Insurance (Est.) <i class="ph-info text-gray-400" title="Based on purchase price"></i>
-                                </span>
-                                <span class="font-semibold text-gray-900" id="out-title">$850.00</span>
+                            <div id="row-reg-trans" class="items-center justify-between text-sm flex">
+                                <span class="font-medium text-gray-600">Registration of Transfer</span>
+                                <span class="font-semibold text-gray-900" id="out-reg-trans">$85.00</span>
                             </div>
 
-                            <div class="w-full h-px bg-gray-200 my-2"></div>
+                            <div id="row-reg-mort" class="items-center justify-between text-sm flex">
+                                <span class="font-medium text-gray-600">Registration of Mortgage</span>
+                                <span class="font-semibold text-gray-900" id="out-reg-mort">$85.00</span>
+                            </div>
 
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-600 font-medium">Ontario Land Transfer Tax</span>
+                            <div id="row-mort-coord" class="items-center justify-between text-sm flex">
+                                <span class="font-medium text-gray-600">Mortgage Coordination Fee</span>
+                                <span class="font-semibold text-gray-900" id="out-mort-coord">$180.00</span>
+                            </div>
+
+                            <div id="row-discharge" class="items-center justify-between text-sm hidden">
+                                <span class="font-medium text-gray-600">Discharge of Mortgage</span>
+                                <span class="font-semibold text-gray-900" id="out-discharge">$85.00</span>
+                            </div>
+
+                            <div id="row-levy" class="items-center justify-between text-sm hidden">
+                                <span class="font-medium text-gray-600">Law Society Levy</span>
+                                <span class="font-semibold text-gray-900" id="out-levy">$73.45</span>
+                            </div>
+
+                            <div id="row-title" class="items-center justify-between text-sm flex">
+                                <span class="font-medium text-gray-600 flex items-center gap-1">Title Insurance (Est.)</span>
+                                <span class="font-semibold text-gray-900" id="out-title">$226.00</span>
+                            </div>
+
+                            <div id="row-divider-1" class="w-full h-px my-2 bg-gray-200 flex"></div>
+
+                            <div id="row-oltt" class="items-center justify-between text-sm flex">
+                                <span class="font-medium text-gray-600">Ontario Land Transfer Tax</span>
                                 <span class="font-semibold text-gray-900" id="out-oltt">$13,475.00</span>
                             </div>
 
-                            <div id="tltt-row" class="hidden justify-between items-center text-sm">
-                                <span class="text-gray-600 font-medium">Toronto Land Transfer Tax</span>
+                            <div id="row-tltt" class="items-center justify-between text-sm hidden">
+                                <span class="font-medium text-gray-600">Toronto Land Transfer Tax</span>
                                 <span class="font-semibold text-gray-900" id="out-tltt">$0.00</span>
                             </div>
 
-                            <div class="w-full h-px bg-gray-200 my-2"></div>
+                            <div id="row-tadmin" class="items-center justify-between text-sm hidden">
+                                <span class="font-medium text-gray-600">Toronto Administration Tax</span>
+                                <span class="font-semibold text-gray-900" id="out-tadmin">$115.89</span>
+                            </div>
+
+                            <div id="row-divider-2" class="w-full h-px my-2 bg-gray-200 flex"></div>
                             
-                            <div class="flex justify-between items-center pt-2">
+                            <div class="flex items-center justify-between pt-2">
                                 <span class="text-lg font-bold text-gray-900">Total Est. Closing Cost</span>
                                 <span class="text-2xl font-bold text-brand-900" id="out-total">$15,858.00</span>
                             </div>
                         </div>
+
+                        <p class="text-xs text-gray-500 leading-snug mt-3">
+                            <i class="ph-info-bold text-brand-500"></i> To assist with budgeting and transparency, our office disbursements are fixed and capped. However, certain third-party charges are not included in office disbursements, including Unity Software fee ($240), ID verification ($30).
+                        </p>
                     </form>
                     
                     <!-- Trigger Lead Capture -->
                     <button onclick="document.getElementById('lead-modal').classList.remove('hidden')" class="mt-6 w-full bg-accent-500 hover:bg-accent-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-md flex justify-center items-center gap-2">
-                        Lock In This Quote
-                        <i class="ph-arrow-right font-bold"></i>
-                    </button>
+<!-- ... existing code ... -->
+        // --- FAQ Toggle Logic ---
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        // --- Pricing Engine Logic ---
+        let currentTab = 'purchase';
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update buttons UI
+            ['purchase', 'sale', 'refinance'].forEach(t => {
+                const btn = document.getElementById(`btn-${t}`);
+                if (t === tab) {
+                    btn.classList.add('bg-white', 'shadow-sm', 'text-gray-900');
+                    btn.classList.remove('text-gray-500');
+                } else {
+                    btn.classList.remove('bg-white', 'shadow-sm', 'text-gray-900');
+                    btn.classList.add('text-gray-500');
+                }
+                
+                // Show/hide input sections
+                const inputSec = document.getElementById(`inputs-${t}`);
+                if (t === tab) {
+                    inputSec.classList.remove('hidden');
+                } else {
+                    inputSec.classList.add('hidden');
+                }
+            });
+
+            calculateAll();
+        }
+
+        // Listen for Mortgage toggle on Purchase tab to hide/show Lender
+        document.getElementById('p-mortgage').addEventListener('change', (e) => {
+            const lenderDiv = document.getElementById('p-lender-div');
+            if(e.target.value === 'yes') {
+                lenderDiv.classList.remove('hidden');
+            } else {
+                lenderDiv.classList.add('hidden');
+            }
+            calculateAll();
+        });
+
+        const outLegal = document.getElementById('out-legal');
+        const outDisb = document.getElementById('out-disb');
+        const outRegTrans = document.getElementById('out-reg-trans');
+        const outRegMort = document.getElementById('out-reg-mort');
+        const outMortCoord = document.getElementById('out-mort-coord');
+        const outDischarge = document.getElementById('out-discharge');
+        const outLevy = document.getElementById('out-levy');
+        const outTitle = document.getElementById('out-title');
+        const outOltt = document.getElementById('out-oltt');
+        const outTltt = document.getElementById('out-tltt');
+        const outTAdmin = document.getElementById('out-tadmin');
+        const outTotal = document.getElementById('out-total');
+
+        const rows = {
+            legal: document.getElementById('row-legal'),
+            disb: document.getElementById('row-disb'),
+            regTrans: document.getElementById('row-reg-trans'),
+            regMort: document.getElementById('row-reg-mort'),
+            mortCoord: document.getElementById('row-mort-coord'),
+            discharge: document.getElementById('row-discharge'),
+            levy: document.getElementById('row-levy'),
+            title: document.getElementById('row-title'),
+            oltt: document.getElementById('row-oltt'),
+            tltt: document.getElementById('row-tltt'),
+            tAdmin: document.getElementById('row-tadmin'),
+            divider1: document.getElementById('row-divider-1'),
+            divider2: document.getElementById('row-divider-2')
+        };
+
+        const formatCurrency = (num) => {
+            return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(num);
+        };
+
+        // Escalate Legal fee based on $50 for every $100k over $1,000,000
+        const getEscalatedLegalFee = (baseFee, value) => {
+            let fee = baseFee;
+            if (value > 1000000) {
+                const excess = value - 1000000;
+                fee += Math.ceil(excess / 100000) * 50;
+            }
+            return fee;
+        };
+
+        // Title Insurance logic
+        const getTitleInsurance = (value) => {
+            let premium = 226; // $200 + HST
+            if (value > 750000) {
+                const excess = value - 750000;
+                premium += Math.ceil(excess / 1000) * 0.75;
+            }
+            return premium;
+        };
+
+        // Standard LTT Logic
+        const calculateLTT = (price) => {
+            let tax = 0;
+            let p = price;
+            
+            if (p > 2000000) { tax += (p - 2000000) * 0.025; p = 2000000; }
+            if (p > 400000) { tax += (p - 400000) * 0.02; p = 400000; }
+            if (p > 250000) { tax += (p - 250000) * 0.015; p = 250000; }
+            if (p > 55000) { tax += (p - 55000) * 0.01; p = 55000; }
+            if (p > 0) { tax += p * 0.005; }
+            return tax;
+        };
+
+        const calculateAll = () => {
+            // Reset all dynamic rows to hidden
+            Object.values(rows).forEach(r => {
+                if(r) {
+                    r.classList.add('hidden');
+                    r.classList.remove('flex');
+                }
+            });
+
+            // Always show Legal Fees and Disbursements
+            rows.legal.classList.remove('hidden'); rows.legal.classList.add('flex');
+            rows.disb.classList.remove('hidden'); rows.disb.classList.add('flex');
+            
+            let total = 0;
+
+            if (currentTab === 'purchase') {
+                const price = parseFloat(document.getElementById('p-price').value) || 0;
+                const isToronto = document.getElementById('p-loc').value === 'toronto';
+                const isFirstTime = document.getElementById('p-first').value === 'yes';
+                const hasMortgage = document.getElementById('p-mortgage').value === 'yes';
+                const lender = document.getElementById('p-lender').value;
+
+                // Legal
+                let legal = getEscalatedLegalFee(999, price);
+                outLegal.textContent = formatCurrency(legal);
+                total += legal;
+
+                // Disbursements
+                let disb = 540;
+                outDisb.textContent = formatCurrency(disb);
+                total += disb;
+
+                // Transfer Registration
+                rows.regTrans.classList.remove('hidden'); rows.regTrans.classList.add('flex');
+                outRegTrans.textContent = formatCurrency(85);
+                total += 85;
+
+                // Mortgage specific logic
+                if (hasMortgage) {
+                    rows.regMort.classList.remove('hidden'); rows.regMort.classList.add('flex');
+                    outRegMort.textContent = formatCurrency(85);
+                    total += 85;
+
+                    rows.mortCoord.classList.remove('hidden'); rows.mortCoord.classList.add('flex');
+                    let coordFee = (lender === 'big') ? 180 : 270;
+                    outMortCoord.textContent = formatCurrency(coordFee);
+                    total += coordFee;
+                }
+
+                // Title Insurance
+                rows.title.classList.remove('hidden'); rows.title.classList.add('flex');
+                let titleIns = getTitleInsurance(price);
+                outTitle.textContent = formatCurrency(titleIns);
+                total += titleIns;
+
+                rows.divider1.classList.remove('hidden'); rows.divider1.classList.add('flex');
+
+                // Land Transfer Tax
+                rows.oltt.classList.remove('hidden'); rows.oltt.classList.add('flex');
+                let oltt = calculateLTT(price);
+                if (isFirstTime) oltt = Math.max(0, oltt - 4000);
+                outOltt.textContent = formatCurrency(oltt);
+                total += oltt;
+
+                if (isToronto) {
+                    rows.tltt.classList.remove('hidden'); rows.tltt.classList.add('flex');
+                    let tltt = calculateLTT(price);
+                    if (isFirstTime) tltt = Math.max(0, tltt - 4475);
+                    outTltt.textContent = formatCurrency(tltt);
+                    total += tltt;
+
+                    rows.tAdmin.classList.remove('hidden'); rows.tAdmin.classList.add('flex');
+                    outTAdmin.textContent = formatCurrency(115.89);
+                    total += 115.89;
+                }
+                
+                rows.divider2.classList.remove('hidden'); rows.divider2.classList.add('flex');
+
+            } else if (currentTab === 'sale') {
+                const price = parseFloat(document.getElementById('s-price').value) || 0;
+                const hasMortgage = document.getElementById('s-mortgage').value === 'yes';
+
+                // Legal
+                let legal = getEscalatedLegalFee(999, price);
+                outLegal.textContent = formatCurrency(legal);
+                total += legal;
+
+                // Disbursements
+                let disb = 540;
+                outDisb.textContent = formatCurrency(disb);
+                total += disb;
+
+                // Mortgage Discharge
+                if (hasMortgage) {
+                    rows.discharge.classList.remove('hidden'); rows.discharge.classList.add('flex');
+                    outDischarge.textContent = formatCurrency(85);
+                    total += 85;
+                }
+
+                // Levy
+                rows.levy.classList.remove('hidden'); rows.levy.classList.add('flex');
+                outLevy.textContent = formatCurrency(73.45);
+                total += 73.45;
+
+                rows.divider2.classList.remove('hidden'); rows.divider2.classList.add('flex');
+
+            } else if (currentTab === 'refinance') {
+                const amount = parseFloat(document.getElementById('r-amount').value) || 0;
+                const lender = document.getElementById('r-lender').value;
+
+                // Legal (Increases by $100 base if non-big bank)
+                let baseLegal = (lender === 'other') ? 1099 : 999;
+                let legal = getEscalatedLegalFee(baseLegal, amount);
+                outLegal.textContent = formatCurrency(legal);
+                total += legal;
+
+                // Disbursements
+                let disb = 540;
+                outDisb.textContent = formatCurrency(disb);
+                total += disb;
+
+                // Registration of Mortgage
+                rows.regMort.classList.remove('hidden'); rows.regMort.classList.add('flex');
+                outRegMort.textContent = formatCurrency(85);
+                total += 85;
+
+                // Title Insurance
+                rows.title.classList.remove('hidden'); rows.title.classList.add('flex');
+                let titleIns = getTitleInsurance(amount);
+                outTitle.textContent = formatCurrency(titleIns);
+                total += titleIns;
+
+                rows.divider2.classList.remove('hidden'); rows.divider2.classList.add('flex');
+            }
+
+            outTotal.textContent = formatCurrency(total);
+        };
+
+        // Event Listeners for all inputs to trigger recalculation automatically
+        document.querySelectorAll('#calc-form input, #calc-form select').forEach(el => {
+            el.addEventListener('input', calculateAll);
+            el.addEventListener('change', calculateAll);
+        });
+
+        // Initial Calculation on Load
+        calculateAll();
+
+        // --- Navbar Scroll Effect ---
+<!-- ... existing code ... -->
                 </div>
             </div>
         </div>
